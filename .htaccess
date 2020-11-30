@@ -24,7 +24,7 @@ Deny from all
 
 ######画像キャッシュ Start#######
 <Files ~ ".(gif|jpe?g|png|webp|svg)$">
-    Header set Cache-Control "max-age=2592000"
+    Header set Cache-Control "max-age=31536000"
 </Files>
 ######画像キャッシュ End#######
 
