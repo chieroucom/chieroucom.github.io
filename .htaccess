@@ -1,0 +1,46 @@
+######誘導関係 Start########
+RewriteEngine on
+
+# httpsへ誘導
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# www無しへ誘導
+RewriteCond %{HTTP_HOST} ^www\.(.*)$
+RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+
+# index.htmlを非表示
+RewriteCond %{THE_REQUEST} ^.*/index.(html|php)
+RewriteRule ^(.*)index.(html|php)$ https://%{HTTP_HOST}/$1/ [R=301,L]
+######誘導関係 End########
+
+
+######htaccessアクセス禁止 Start######
+<Files ~ "^\.(htaccess|htpasswd)$">
+Deny from all
+</Files>
+######htaccessアクセス禁止 End######
+
+
+######画像キャッシュ Start#######
+<Files ~ ".(gif|jpe?g|png|webp|svg)$">
+    Header set Cache-Control "max-age=2592000"
+</Files>
+######画像キャッシュ End#######
+
+
+######gzip圧縮 Start######
+<IfModule mod_deflate.c>
+  SetOutputFilter DEFLATE
+ 
+  # 画像は再圧縮しない
+  SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png|webp)$ no-gzip dont-vary
+  
+  # 圧縮設定
+  AddOutputFilterByType DEFLATE text/plain
+  AddOutputFilterByType DEFLATE text/html
+  AddOutputFilterByType DEFLATE text/js
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+######gzip圧縮 Start######
+
